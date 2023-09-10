@@ -1,11 +1,10 @@
 FROM python:3.8
 
+ADD WebScraperMySql.py .
 
-ADD WebScrapeSqlServer.py .
-
-RUN pip install requests BeautifulSoup4
+RUN pip install requests
 RUN pip install BeautifulSoup4
-RUN pip install pyodbc
+RUN pip install mysql.connector
 RUN pip install datetime
 
-CMD [ "python" , "./WebScrapeSqlServer.py" ]
+CMD [ "python" , "./WebScraperMySql.py" ]

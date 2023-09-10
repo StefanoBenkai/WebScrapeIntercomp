@@ -1,16 +1,16 @@
-import pyodbc
 from bs4 import BeautifulSoup
 import requests
+import mysql.connector
 import datetime
 
-# SQL Server connection
-server = 'YARA\MSSQLSERVER01'
-database = 'WebScrape'
-username = ''
-password = ''
+# MYSQl Conn Parameters
+host = 'localhost'
+user = 'root'
+password = '****'
+database = 'WebScrapeDB'
 
-
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=' + server + ';DATABASE=' + database + ';Trusted_Connection=yes')
+#
+conn = mysql.connector.connect(host=host, user=user, password=password, database=database)
 
 search_filter = '16GB'
 
@@ -18,7 +18,7 @@ url = f"https://intercomp.com.mt/page/1/?post_type=product&s={search_filter}"
 webpage = requests.get(url).text
 mydoc = BeautifulSoup(webpage, 'html.parser')
 
-item_found = {}
+item_found = []
 
 page = mydoc.find('span', class_='page-numbers current')
 page_num = int(str(page).split("/")[-2].split("<")[-2][-1])
@@ -40,20 +40,13 @@ for webpage_num in range(1, page_num + 1):
         price = main_parent.find(class_='woocommerce-Price-amount amount').get_text(strip=True)
         price = float(price[1:].replace(',', ''))
 
-        # item_found = {'items': item.text, 'price': price.text, 'link': link, 'image_link': image_link}
-
-        # print(item_found)
-
+        # Insert into MySQL
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO T_LaptopWebScrape (LaptopID, LaptopURL, LaptopImageURL, LaptopPrice, TimestampLoad) VALUES (?, ?, ?, ?, ?)",
-                       (item.text, link, image_link, price, datetime.datetime.now()))
+        insert_query = "INSERT INTO t_laptopwebscrape (LaptopID, LaptopURL, LaptopImageURL, LaptopPrice, TimestampLoad) VALUES (%s, %s, %s, %s, %s)"
+        cursor.execute(insert_query, (item.text, link, image_link, price, datetime.datetime.now()))
         conn.commit()
 
-        cursor.close()
-
-# Close db conn
+# Close Conn
 conn.close()
 
-
-file = open(r'C:\Users\stefa\PycharmProjects\WebScrapeIntercomp\RunLog.txt','a')
-file.write(f'{datetime.datetime.now()} - The script was run \n')
+print('Executed')
