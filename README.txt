@@ -24,6 +24,8 @@ The following technologies and tools were used in the development of this projec
 The project scrapes data from the Intercomp Malta website, extracting information such as the laptop name, price, and image.
 
 ## Data Base
+ - MySQL
+ - SQL Server
 
 ## Data Pipeline
 
