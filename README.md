@@ -1,5 +1,4 @@
 
-
 # Laptop Price Tracker
 
 ## Project Description
@@ -42,4 +41,3 @@ A simple PowerBI dashboard has been created to visualize the collected data and 
 ## Contributing
 
 Contributions to this project are welcome.
-
